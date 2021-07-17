@@ -1,0 +1,27 @@
+version: "3.3"
+services:
+  app:
+    build: "app/."  # build the dockerfile from `app` directory
+    ports:
+      - "3000:3000"  # expose port 3000 so we can access it
+    volumes:
+      - "./app:/app"  # mount `app`'s root directory into the container
+    environment:
+      - "PYTHONBUFFERED=1"  # so we can see logs
+      - "RMQ_HOST=rabbitmq"  # set RMQ host for app
+    depends_on:
+      - "rabbitmq"  # don't start without rabbitmq
+  listener:
+    build: "listener/."  # build dockerfile from `listener` directory
+    environment:
+      - "RMQ_HOST=rabbitmq"  # set RMQ host
+      - "PYTHONBUFFERED=1"  # so we can see logs
+    volumes:
+      - "./listener:/app"  # mount `listener` root directory into container
+    depends_on:
+      - "rabbitmq"  # don't start without rabbitmq
+  rabbitmq:
+    image: "rabbitmq:3-management-alpine"  # use the public rabbitmq image
+    ports:
+      - "5672:5672"  # expose rmq ports to outside world
+      - "15672:15672"  # allow us to use management. default user:pass guest:guest
