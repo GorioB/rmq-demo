@@ -5,6 +5,8 @@ Python RMQ demo for Elvis
 
 ### 1. Install docker and docker compose
 
+You need to be able to run `docker-compose` command on your command line
+
 ### 2. Start the server
 
 ```
